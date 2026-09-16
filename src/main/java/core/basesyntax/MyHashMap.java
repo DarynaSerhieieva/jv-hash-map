@@ -75,7 +75,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         for (Node<K, V> node : oldTable) {
             while (node != null) {
                 Node<K, V> next = node.next;
-                int position = hash(node.key);
+                int position = hash(node.hash);
 
                 node.next = table[position];
                 table[position] = node;
@@ -85,7 +85,11 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     }
 
     private boolean capacityNeedsToBeChanged() {
-        return capacity * DEFAULT_LOAD_FACTOR == size;
+        return capacity * DEFAULT_LOAD_FACTOR <= size;
+    }
+
+    private int hash(int hash) {
+        return Math.floorMod(hash, capacity);
     }
 
     private int hash(K key) {
